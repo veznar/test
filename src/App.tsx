@@ -1,92 +1,85 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-function App() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const totalSlides = 15;
+const C = {
+  black: '#101820',
+  blue: '#236192',
+  red: '#EF3340',
+  white: '#ffffff',
+  w70: 'rgba(255,255,255,0.7)',
+  w60: 'rgba(255,255,255,0.6)',
+  w50: 'rgba(255,255,255,0.5)',
+  w40: 'rgba(255,255,255,0.4)',
+  w30: 'rgba(255,255,255,0.3)',
+  w20: 'rgba(255,255,255,0.2)',
+  w10: 'rgba(255,255,255,0.1)',
+  w05: 'rgba(255,255,255,0.05)',
+  w03: 'rgba(255,255,255,0.03)',
+  t70: 'rgba(16,24,32,0.7)',
+  t60: 'rgba(16,24,32,0.6)',
+  t50: 'rgba(16,24,32,0.5)',
+  t40: 'rgba(16,24,32,0.4)',
+  t30: 'rgba(16,24,32,0.3)',
+  t10: 'rgba(16,24,32,0.1)',
+  t04: 'rgba(16,24,32,0.04)',
+};
 
-  const nextSlide = useCallback(() => {
-    setCurrentSlide(prev => Math.min(prev + 1, totalSlides - 1));
-  }, []);
-
-  const prevSlide = useCallback(() => {
-    setCurrentSlide(prev => Math.max(prev - 1, 0));
-  }, []);
-
-  const goToSlide = useCallback((index: number) => {
-    setCurrentSlide(index);
-  }, []);
+export default function App() {
+  const [slide, setSlide] = useState(0);
+  const total = 15;
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-        e.preventDefault();
-        nextSlide();
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        prevSlide();
-      }
+    const h = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') setSlide(p => Math.min(p + 1, total - 1));
+      if (e.key === 'ArrowLeft') setSlide(p => Math.max(p - 1, 0));
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [nextSlide, prevSlide]);
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, []);
+
+  const next = () => setSlide(p => Math.min(p + 1, total - 1));
+  const prev = () => setSlide(p => Math.max(p - 1, 0));
 
   return (
-    <div className="w-full h-screen flex flex-col" style={{ background: '#101820' }}>
-      {/* Slide area */}
-      <div className="flex-1 relative overflow-hidden">
-        {currentSlide === 0 && <Slide1 />}
-        {currentSlide === 1 && <Slide2 />}
-        {currentSlide === 2 && <Slide3 />}
-        {currentSlide === 3 && <Slide4 />}
-        {currentSlide === 4 && <Slide5 />}
-        {currentSlide === 5 && <Slide6 />}
-        {currentSlide === 6 && <Slide7 />}
-        {currentSlide === 7 && <Slide8 />}
-        {currentSlide === 8 && <Slide9 />}
-        {currentSlide === 9 && <Slide10 />}
-        {currentSlide === 10 && <Slide11 />}
-        {currentSlide === 11 && <Slide12 />}
-        {currentSlide === 12 && <Slide13 />}
-        {currentSlide === 13 && <Slide14 />}
-        {currentSlide === 14 && <Slide15 />}
+    <div style={{ width: '100%', height: '100vh', display: 'flex', flexDirection: 'column', background: C.black }}>
+      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+        {slide === 0 && <S1 />}
+        {slide === 1 && <S2 />}
+        {slide === 2 && <S3 />}
+        {slide === 3 && <S4 />}
+        {slide === 4 && <S5 />}
+        {slide === 5 && <S6 />}
+        {slide === 6 && <S7 />}
+        {slide === 7 && <S8 />}
+        {slide === 8 && <S9 />}
+        {slide === 9 && <S10 />}
+        {slide === 10 && <S11 />}
+        {slide === 11 && <S12 />}
+        {slide === 12 && <S13 />}
+        {slide === 13 && <S14 />}
+        {slide === 14 && <S15 />}
       </div>
 
-      {/* Navigation */}
-      <nav className="h-14 flex items-center justify-between px-4 shrink-0 border-t border-white/10" style={{ background: '#0a0f14' }}>
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 border border-white/40 relative">
-            <div className="absolute top-0 right-0 w-3/4 h-3/4" style={{ background: '#EF3340' }}></div>
+      <nav style={{ height: '56px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 16px', borderTop: `1px solid ${C.w10}`, background: '#0a0f14', flexShrink: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '20px', height: '20px', border: `1px solid ${C.w40}`, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.red }}></div>
           </div>
-          <span className="text-white/50 text-xs hidden sm:block">Ростех</span>
+          <span style={{ color: C.w50, fontSize: '12px' }}>Ростех</span>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          {Array.from({ length: totalSlides }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => goToSlide(i)}
-              className="h-2 rounded-full transition-all duration-300"
-              style={{
-                width: i === currentSlide ? '24px' : '8px',
-                background: i === currentSlide ? '#EF3340' : 'rgba(255,255,255,0.2)',
-              }}
-            />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {Array.from({ length: total }).map((_, i) => (
+            <button key={i} onClick={() => setSlide(i)} style={{ height: '8px', borderRadius: '4px', width: i === slide ? '24px' : '8px', background: i === slide ? C.red : C.w20, border: 'none', cursor: 'pointer', transition: 'all 0.3s' }} />
           ))}
         </div>
 
-        <div className="flex items-center gap-2">
-          <button onClick={prevSlide} disabled={currentSlide === 0}
-            className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white disabled:opacity-20 transition-colors">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button onClick={prev} disabled={slide === 0} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: slide === 0 ? C.w20 : C.w50, background: 'transparent', border: 'none', cursor: slide === 0 ? 'not-allowed' : 'pointer' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
-          <span className="text-white/50 text-xs min-w-[3rem] text-center">{currentSlide + 1} / {totalSlides}</span>
-          <button onClick={nextSlide} disabled={currentSlide === totalSlides - 1}
-            className="w-8 h-8 flex items-center justify-center text-white/50 hover:text-white disabled:opacity-20 transition-colors">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+          <span style={{ color: C.w50, fontSize: '12px', minWidth: '48px', textAlign: 'center' }}>{slide + 1} / {total}</span>
+          <button onClick={next} disabled={slide === total - 1} style={{ width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: slide === total - 1 ? C.w20 : C.w50, background: 'transparent', border: 'none', cursor: slide === total - 1 ? 'not-allowed' : 'pointer' }}>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
         </div>
       </nav>
@@ -94,186 +87,158 @@ function App() {
   );
 }
 
-// ===== SLIDES =====
-
-function Slide1() {
+function S1() {
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center relative px-8" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-      {/* Decorative squares */}
-      <div className="absolute top-10 left-10 w-32 h-32 border border-white/10 opacity-30"></div>
-      <div className="absolute bottom-20 right-20 w-48 h-48 border border-white/10 opacity-20"></div>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', padding: '32px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ position: 'absolute', top: '40px', left: '40px', width: '128px', height: '128px', border: `1px solid ${C.w10}`, opacity: 0.3 }}></div>
+      <div style={{ position: 'absolute', bottom: '80px', right: '80px', width: '192px', height: '192px', border: `1px solid ${C.w10}`, opacity: 0.2 }}></div>
 
-      <div className="text-center max-w-5xl anim-fade">
-        <div className="flex justify-center mb-8">
-          <div className="relative w-20 h-20 border-2 border-white">
-            <div className="absolute top-0 right-0 w-3/4 h-3/4" style={{ background: '#EF3340' }}></div>
+      <div style={{ textAlign: 'center', maxWidth: '1024px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+          <div style={{ position: 'relative', width: '80px', height: '80px', border: `2px solid ${C.white}` }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.red }}></div>
           </div>
         </div>
-        <h1 className="text-white text-3xl md:text-5xl font-bold tracking-tight leading-tight">
-          Ростех и ГТЛК подписали контракт
-        </h1>
-        <h2 className="text-3xl md:text-4xl font-bold mt-4 tracking-tight" style={{ color: '#EF3340' }}>
-          на поставку 72 вертолётов Ми-8
-        </h2>
-        <p className="text-white/60 text-xl mt-6">для регионов России</p>
+        <h1 style={{ color: C.white, fontSize: 'clamp(24px, 4vw, 48px)', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1.2 }}>Ростех и ГТЛК подписали контракт</h1>
+        <h2 style={{ color: C.red, fontSize: 'clamp(24px, 3.5vw, 40px)', fontWeight: 700, marginTop: '16px', letterSpacing: '-0.02em' }}>на поставку 72 вертолётов Ми-8</h2>
+        <p style={{ color: C.w60, fontSize: 'clamp(16px, 2vw, 20px)', marginTop: '24px' }}>для регионов России</p>
 
-        <div className="mt-12 flex items-center justify-center gap-4 anim-fade d3">
-          <div className="h-px w-16" style={{ background: '#236192' }}></div>
-          <span className="text-white/40 text-sm uppercase tracking-widest">11 сентября 2026</span>
-          <div className="h-px w-16" style={{ background: '#236192' }}></div>
+        <div style={{ marginTop: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+          <div style={{ height: '1px', width: '64px', background: C.blue }}></div>
+          <span style={{ color: C.w40, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.1em' }}>11 сентября 2026</span>
+          <div style={{ height: '1px', width: '64px', background: C.blue }}></div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(35,97,146,0.15)' }}>
-        <div className="flex items-center gap-2">
-          <div className="w-5 h-5 border border-white/40 relative">
-            <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-white/40"></div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(35,97,146,0.15)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <div style={{ width: '20px', height: '20px', border: `1px solid ${C.w40}`, position: 'relative' }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.w40 }}></div>
           </div>
-          <span className="text-white/60 text-sm">Ростех</span>
+          <span style={{ color: C.w60, fontSize: '14px' }}>Ростех</span>
         </div>
-        <span className="text-white/40 text-xs">Партнёр в развитии</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</span>
       </div>
     </div>
   );
 }
 
-function Slide2() {
+function S2() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Обзор сделки</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Обзор сделки</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: '#101820' }}>Ключевые параметры контракта</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Ключевые параметры контракта</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
-          <div className="anim-fade d2 p-6 rounded" style={{ background: '#101820' }}>
-            <div className="text-4xl font-bold mb-2" style={{ color: '#EF3340' }}>72</div>
-            <div className="text-white text-lg">вертолёта Ми-8МТВ-1</div>
-            <div className="text-white/50 text-sm mt-2">транспортный вариант</div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1024px' }}>
+          <div style={{ padding: '24px', background: C.black, borderRadius: '4px' }}>
+            <div style={{ color: C.red, fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>72</div>
+            <div style={{ color: C.white, fontSize: '18px' }}>вертолёта Ми-8МТВ-1</div>
+            <div style={{ color: C.w50, fontSize: '14px', marginTop: '8px' }}>транспортный вариант</div>
           </div>
-          <div className="anim-fade d3 p-6 rounded border-2" style={{ borderColor: '#236192' }}>
-            <div className="text-4xl font-bold mb-2" style={{ color: '#236192' }}>КВЗ</div>
-            <div className="text-lg" style={{ color: '#101820' }}>Казанский вертолётный завод</div>
-            <div className="text-sm mt-2" style={{ color: 'rgba(16,24,32,0.5)' }}>место производства</div>
+          <div style={{ padding: '24px', border: `2px solid ${C.blue}`, borderRadius: '4px' }}>
+            <div style={{ color: C.blue, fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>КВЗ</div>
+            <div style={{ color: C.black, fontSize: '18px' }}>Казанский вертолётный завод</div>
+            <div style={{ color: C.t50, fontSize: '14px', marginTop: '8px' }}>место производства</div>
           </div>
-          <div className="anim-fade d4 p-6 rounded border-2" style={{ borderColor: '#101820' }}>
-            <div className="text-4xl font-bold mb-2" style={{ color: '#101820' }}>ФНБ</div>
-            <div className="text-lg" style={{ color: '#101820' }}>Фонд национального благосостояния</div>
-            <div className="text-sm mt-2" style={{ color: 'rgba(16,24,32,0.5)' }}>источник финансирования</div>
+          <div style={{ padding: '24px', border: `2px solid ${C.black}`, borderRadius: '4px' }}>
+            <div style={{ color: C.black, fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>ФНБ</div>
+            <div style={{ color: C.black, fontSize: '18px' }}>Фонд национального благосостояния</div>
+            <div style={{ color: C.t50, fontSize: '14px', marginTop: '8px' }}>источник финансирования</div>
           </div>
-          <div className="anim-fade d5 p-6 rounded" style={{ background: '#236192' }}>
-            <div className="text-white text-4xl font-bold mb-2">2026</div>
-            <div className="text-white text-lg">первые поставки</div>
-            <div className="text-white/50 text-sm mt-2">до конца текущего года</div>
+          <div style={{ padding: '24px', background: C.blue, borderRadius: '4px' }}>
+            <div style={{ color: C.white, fontSize: '36px', fontWeight: 700, marginBottom: '8px' }}>2026</div>
+            <div style={{ color: C.white, fontSize: '18px' }}>первые поставки</div>
+            <div style={{ color: C.w50, fontSize: '14px', marginTop: '8px' }}>до конца текущего года</div>
           </div>
         </div>
       </div>
-
       <Footer num={2} />
     </div>
   );
 }
 
-function Slide3() {
+function S3() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Стороны контракта</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Стороны контракта</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10" style={{ color: '#101820' }}>Партнёры по сделке</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Партнёры по сделке</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl">
-          <div className="anim-left d2">
-            <div className="pl-6 py-4" style={{ borderLeft: '4px solid #EF3340' }}>
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#101820' }}>Госкорпорация Ростех</h3>
-              <p className="text-base leading-relaxed" style={{ color: 'rgba(16,24,32,0.7)' }}>
-                Один из крупнейших промышленных конгломератов России. Объединяет более 800 организаций.
-                Холдинг «Вертолёты России» — разработчик и производитель вертолётной техники.
-              </p>
-            </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '32px', maxWidth: '1024px' }}>
+          <div style={{ paddingLeft: '24px', borderLeft: `4px solid ${C.red}` }}>
+            <h3 style={{ color: C.black, fontSize: '24px', fontWeight: 700, marginBottom: '16px' }}>Госкорпорация Ростех</h3>
+            <p style={{ color: C.t70, fontSize: '16px', lineHeight: 1.6 }}>Один из крупнейших промышленных конгломератов России. Объединяет более 800 организаций. Холдинг «Вертолёты России» — разработчик и производитель вертолётной техники.</p>
           </div>
-          <div className="anim-right d3">
-            <div className="pl-6 py-4" style={{ borderLeft: '4px solid #236192' }}>
-              <h3 className="text-2xl font-bold mb-4" style={{ color: '#101820' }}>ГТЛК (группа ВЭБ.РФ)</h3>
-              <p className="text-base leading-relaxed" style={{ color: 'rgba(16,24,32,0.7)' }}>
-                Государственная транспортная лизинговая компания — институт развития, обеспечивающий обновление
-                транспортной системы страны. Выполняет задачи государственного уровня.
-              </p>
-            </div>
+          <div style={{ paddingLeft: '24px', borderLeft: `4px solid ${C.blue}` }}>
+            <h3 style={{ color: C.black, fontSize: '24px', fontWeight: 700, marginBottom: '16px' }}>ГТЛК (группа ВЭБ.РФ)</h3>
+            <p style={{ color: C.t70, fontSize: '16px', lineHeight: 1.6 }}>Государственная транспортная лизинговая компания — институт развития, обеспечивающий обновление транспортной системы страны. Выполняет задачи государственного уровня.</p>
           </div>
         </div>
 
-        <div className="anim-fade d5 mt-8 p-4 rounded" style={{ background: 'rgba(16,24,32,0.04)' }}>
-          <p className="text-sm" style={{ color: 'rgba(16,24,32,0.7)' }}>
-            <span className="font-bold" style={{ color: '#236192' }}>Минпромторг России</span> — поддержка проекта в рамках инвестпрограммы по обновлению вертолётного парка
-          </p>
+        <div style={{ marginTop: '32px', padding: '16px', background: C.t04, borderRadius: '4px', maxWidth: '1024px' }}>
+          <p style={{ color: C.t70, fontSize: '14px' }}><span style={{ fontWeight: 700, color: C.blue }}>Минпромторг России</span> — поддержка проекта в рамках инвестпрограммы по обновлению вертолётного парка</p>
         </div>
       </div>
-
       <Footer num={3} />
     </div>
   );
 }
 
-function Slide4() {
+function S4() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-      <div className="absolute right-0 top-0 w-1/2 h-full opacity-5">
-        <div className="absolute top-1/4 right-10 w-80 h-80 border border-white rotate-12"></div>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center relative z-10">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#EF3340' }}>Вертолёт</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.red, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Вертолёт</span>
           </div>
-          <h2 className="text-white text-3xl md:text-5xl font-bold mb-4">Ми-8МТВ-1</h2>
-          <p className="text-white/50 text-xl mb-8">Глубокая модернизация самого массового вертолёта в истории авиации</p>
+          <h2 style={{ color: C.white, fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 700, marginBottom: '16px' }}>Ми-8МТВ-1</h2>
+          <p style={{ color: C.w50, fontSize: 'clamp(16px, 2vw, 20px)', marginBottom: '32px' }}>Глубокая модернизация самого массового вертолёта в истории авиации</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl">
-          <div className="anim-fade d2 border border-white/20 p-6">
-            <div className="text-3xl mb-3">🚁</div>
-            <h4 className="text-white font-bold text-lg mb-2">Многоцелевой</h4>
-            <p className="text-white/50 text-sm">Перевозка людей и грузов в удалённые и труднодоступные населённые пункты</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', maxWidth: '1024px' }}>
+          <div style={{ border: `1px solid ${C.w20}`, padding: '24px' }}>
+            <div style={{ fontSize: '30px', marginBottom: '12px' }}>🚁</div>
+            <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px', marginBottom: '8px' }}>Многоцелевой</h4>
+            <p style={{ color: C.w50, fontSize: '14px' }}>Перевозка людей и грузов в удалённые и труднодоступные населённые пункты</p>
           </div>
-          <div className="anim-fade d3 border border-white/20 p-6">
-            <div className="text-3xl mb-3">⚙️</div>
-            <h4 className="text-white font-bold text-lg mb-2">Модульный</h4>
-            <p className="text-white/50 text-sm">Оснащается модулями для поисково-спасательных и медицинских задач</p>
+          <div style={{ border: `1px solid ${C.w20}`, padding: '24px' }}>
+            <div style={{ fontSize: '30px', marginBottom: '12px' }}>⚙️</div>
+            <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px', marginBottom: '8px' }}>Модульный</h4>
+            <p style={{ color: C.w50, fontSize: '14px' }}>Оснащается модулями для поисково-спасательных и медицинских задач</p>
           </div>
-          <div className="anim-fade d4 border border-white/20 p-6">
-            <div className="text-3xl mb-3">⛽</div>
-            <h4 className="text-white font-bold text-lg mb-2">Доп. баки 915 л</h4>
-            <p className="text-white/50 text-sm">Увеличение дальности полёта для районов с большой протяжённостью</p>
+          <div style={{ border: `1px solid ${C.w20}`, padding: '24px' }}>
+            <div style={{ fontSize: '30px', marginBottom: '12px' }}>⛽</div>
+            <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px', marginBottom: '8px' }}>Доп. баки 915 л</h4>
+            <p style={{ color: C.w50, fontSize: '14px' }}>Увеличение дальности полёта для районов с большой протяжённостью</p>
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(255,255,255,0.03)' }}>
-        <span className="text-white/40 text-xs">Фото: Вертолёты России</span>
-        <span className="text-white/40 text-xs">04 / 15</span>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: C.w03 }}>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Фото: Вертолёты России</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>04 / 15</span>
       </div>
     </div>
   );
 }
 
-function Slide5() {
+function S5() {
   const items = [
     { label: 'Повышенная грузоподъёмность', desc: 'при перевозке груза на внешней подвеске' },
     { label: 'Увеличенная максимальная взлётная масса', desc: 'больше полезной нагрузки за вылет' },
@@ -284,129 +249,119 @@ function Slide5() {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>ТТХ</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>ТТХ</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: '#101820' }}>Технические преимущества Ми-8МТВ-1</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Технические преимущества Ми-8МТВ-1</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 max-w-5xl">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '16px 48px', maxWidth: '1024px' }}>
           {items.map((item, i) => (
-            <div key={i} className="anim-fade flex items-start gap-4 py-3 border-b" style={{ borderColor: 'rgba(16,24,32,0.1)', animationDelay: `${0.2 + i * 0.1}s` }}>
-              <div className="w-2 h-2 mt-2 shrink-0" style={{ background: '#EF3340' }}></div>
+            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '12px 0', borderBottom: `1px solid ${C.t10}` }}>
+              <div style={{ width: '8px', height: '8px', marginTop: '8px', flexShrink: 0, background: C.red }}></div>
               <div>
-                <div className="font-bold text-base" style={{ color: '#101820' }}>{item.label}</div>
-                <div className="text-sm" style={{ color: 'rgba(16,24,32,0.5)' }}>{item.desc}</div>
+                <div style={{ fontWeight: 700, fontSize: '16px', color: C.black }}>{item.label}</div>
+                <div style={{ fontSize: '14px', color: C.t50 }}>{item.desc}</div>
               </div>
             </div>
           ))}
         </div>
       </div>
-
       <Footer num={5} />
     </div>
   );
 }
 
-function Slide6() {
+function S6() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Производитель</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '32px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Производитель</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-8" style={{ color: '#101820' }}>Казанский вертолётный завод</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Казанский вертолётный завод</h2>
         </div>
 
-        <div className="max-w-5xl">
-          <div className="anim-fade d2 grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="p-6 text-center" style={{ background: '#101820' }}>
-              <div className="text-4xl font-bold" style={{ color: '#EF3340' }}>1944</div>
-              <div className="text-white/60 text-sm mt-2">год основания</div>
+        <div style={{ maxWidth: '1024px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px', marginBottom: '32px' }}>
+            <div style={{ padding: '24px', textAlign: 'center', background: C.black }}>
+              <div style={{ color: C.red, fontSize: '36px', fontWeight: 700 }}>1944</div>
+              <div style={{ color: C.w60, fontSize: '14px', marginTop: '8px' }}>год основания</div>
             </div>
-            <div className="p-6 text-center" style={{ background: '#236192' }}>
-              <div className="text-white text-4xl font-bold">80+</div>
-              <div className="text-white/60 text-sm mt-2">лет опыта</div>
+            <div style={{ padding: '24px', textAlign: 'center', background: C.blue }}>
+              <div style={{ color: C.white, fontSize: '36px', fontWeight: 700 }}>80+</div>
+              <div style={{ color: C.w60, fontSize: '14px', marginTop: '8px' }}>лет опыта</div>
             </div>
-            <div className="p-6 text-center border-2" style={{ borderColor: '#101820' }}>
-              <div className="text-4xl font-bold" style={{ color: '#101820' }}>12 000+</div>
-              <div className="text-sm mt-2" style={{ color: 'rgba(16,24,32,0.5)' }}>вертолётов произведено</div>
+            <div style={{ padding: '24px', textAlign: 'center', border: `2px solid ${C.black}` }}>
+              <div style={{ color: C.black, fontSize: '36px', fontWeight: 700 }}>12 000+</div>
+              <div style={{ color: C.t50, fontSize: '14px', marginTop: '8px' }}>вертолётов произведено</div>
             </div>
           </div>
 
-          <div className="anim-fade d4 p-6 rounded" style={{ background: 'rgba(16,24,32,0.04)' }}>
-            <p className="text-base leading-relaxed" style={{ color: 'rgba(16,24,32,0.7)' }}>
-              Казанский вертолётный завод (входит в холдинг «Вертолёты России» Госкорпорации Ростех) —
-              один из ведущих вертолётных заводов России. Здесь производится вся линейка вертолётов Ми-8,
-              которые являются самыми массовыми вертолётами в мировой авиации.
-            </p>
+          <div style={{ padding: '24px', background: C.t04, borderRadius: '4px' }}>
+            <p style={{ color: C.t70, fontSize: '16px', lineHeight: 1.6 }}>Казанский вертолётный завод (входит в холдинг «Вертолёты России» Госкорпорации Ростех) — один из ведущих вертолётных заводов России. Здесь производится вся линейка вертолётов Ми-8, которые являются самыми массовыми вертолётами в мировой авиации.</p>
           </div>
         </div>
       </div>
-
       <Footer num={6} />
     </div>
   );
 }
 
-function Slide7() {
+function S7() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#EF3340' }}>Государственная поддержка</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.red, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Государственная поддержка</span>
           </div>
-          <h2 className="text-white text-3xl md:text-4xl font-bold mb-10">Механизм реализации</h2>
+          <h2 style={{ color: C.white, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Механизм реализации</h2>
         </div>
 
-        <div className="max-w-5xl space-y-6">
-          <div className="anim-fade d2 flex items-start gap-6">
-            <div className="w-12 h-12 flex items-center justify-center shrink-0 text-white font-bold text-lg" style={{ background: '#EF3340' }}>1</div>
+        <div style={{ maxWidth: '1024px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+            <div style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: C.red, color: C.white, fontWeight: 700, fontSize: '18px' }}>1</div>
             <div>
-              <h4 className="text-white font-bold text-lg">Минпромторг России</h4>
-              <p className="text-white/50 text-sm mt-1">Поддержка проекта в рамках инвестиционного проекта по обновлению вертолётного парка</p>
+              <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px' }}>Минпромторг России</h4>
+              <p style={{ color: C.w50, fontSize: '14px', marginTop: '4px' }}>Поддержка проекта в рамках инвестиционного проекта по обновлению вертолётного парка</p>
             </div>
           </div>
-          <div className="anim-fade d3 flex items-start gap-6">
-            <div className="w-12 h-12 flex items-center justify-center shrink-0 text-white font-bold text-lg" style={{ background: '#236192' }}>2</div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+            <div style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, background: C.blue, color: C.white, fontWeight: 700, fontSize: '18px' }}>2</div>
             <div>
-              <h4 className="text-white font-bold text-lg">Фонд национального благосостояния (ФНБ)</h4>
-              <p className="text-white/50 text-sm mt-1">Использование средств ФНБ для финансирования поставок вертолётной техники</p>
+              <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px' }}>Фонд национального благосостояния (ФНБ)</h4>
+              <p style={{ color: C.w50, fontSize: '14px', marginTop: '4px' }}>Использование средств ФНБ для финансирования поставок вертолётной техники</p>
             </div>
           </div>
-          <div className="anim-fade d4 flex items-start gap-6">
-            <div className="w-12 h-12 flex items-center justify-center shrink-0 text-white font-bold text-lg border-2 border-white">3</div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '24px' }}>
+            <div style={{ width: '48px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, border: `2px solid ${C.white}`, color: C.white, fontWeight: 700, fontSize: '18px' }}>3</div>
             <div>
-              <h4 className="text-white font-bold text-lg">Льготный лизинг</h4>
-              <p className="text-white/50 text-sm mt-1">Передача техники авиаперевозчикам на льготных условиях через механизм лизинга ГТЛК</p>
+              <h4 style={{ color: C.white, fontWeight: 700, fontSize: '18px' }}>Льготный лизинг</h4>
+              <p style={{ color: C.w50, fontSize: '14px', marginTop: '4px' }}>Передача техники авиаперевозчикам на льготных условиях через механизм лизинга ГТЛК</p>
             </div>
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(255,255,255,0.03)' }}>
-        <span className="text-white/40 text-xs">Партнёр в развитии</span>
-        <span className="text-white/40 text-xs">07 / 15</span>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: C.w03 }}>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>07 / 15</span>
       </div>
     </div>
   );
 }
 
-function Slide8() {
+function S8() {
   const goals = [
     { icon: '🔄', title: 'Обновление парка', text: 'Замена старых машин новой современной техникой' },
     { icon: '🛡️', title: 'Безопасность', text: 'Повышение безопасности и надёжности авиасообщения' },
@@ -415,267 +370,228 @@ function Slide8() {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Цели проекта</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Цели проекта</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10" style={{ color: '#101820' }}>Стратегические задачи</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Стратегические задачи</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))', gap: '24px', maxWidth: '1024px' }}>
           {goals.map((item, i) => (
-            <div key={i} className="anim-fade flex gap-4 p-5 border transition-colors" style={{ borderColor: 'rgba(16,24,32,0.1)', animationDelay: `${0.2 + i * 0.1}s` }}>
-              <div className="text-3xl">{item.icon}</div>
+            <div key={i} style={{ display: 'flex', gap: '16px', padding: '20px', border: `1px solid ${C.t10}` }}>
+              <div style={{ fontSize: '30px' }}>{item.icon}</div>
               <div>
-                <h4 className="font-bold text-lg" style={{ color: '#101820' }}>{item.title}</h4>
-                <p className="text-sm mt-1" style={{ color: 'rgba(16,24,32,0.5)' }}>{item.text}</p>
+                <h4 style={{ fontWeight: 700, fontSize: '18px', color: C.black }}>{item.title}</h4>
+                <p style={{ fontSize: '14px', marginTop: '4px', color: C.t50 }}>{item.text}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
-
       <Footer num={8} />
     </div>
   );
 }
 
-function Slide9() {
+function S9() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#236192' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 right-20 w-96 h-96 border border-white rounded-full"></div>
-      </div>
-
-      <div className="flex-1 flex flex-col justify-center relative z-10">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-white/60 text-sm font-semibold uppercase tracking-widest">Статистика</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.blue }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.w60, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Статистика</span>
           </div>
-          <h2 className="text-white text-3xl md:text-4xl font-bold mb-4">Уже поставлено</h2>
-          <p className="text-white/60 text-lg mb-10">В рамках инвестпроекта 2023–2026 гг.</p>
+          <h2 style={{ color: C.white, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700, marginBottom: '16px' }}>Уже поставлено</h2>
+          <p style={{ color: C.w60, fontSize: '18px' }}>В рамках инвестпроекта 2023–2026 гг.</p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center gap-8 max-w-5xl">
-          <div className="anim-scale d2 text-center">
-            <div className="text-white text-7xl md:text-9xl font-bold leading-none">86</div>
-            <div className="text-white/70 text-xl mt-4">вертолётов уже переданы</div>
-            <div className="text-white/40 text-sm mt-2">региональным авиакомпаниям</div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px', maxWidth: '1024px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ color: C.white, fontSize: 'clamp(64px, 10vw, 144px)', fontWeight: 700, lineHeight: 1 }}>86</div>
+            <div style={{ color: C.w70, fontSize: '20px', marginTop: '16px' }}>вертолётов уже переданы</div>
+            <div style={{ color: C.w40, fontSize: '14px', marginTop: '8px' }}>региональным авиакомпаниям</div>
           </div>
 
-          <div className="anim-fade d4 hidden md:block w-px h-40" style={{ background: 'rgba(255,255,255,0.2)' }}></div>
-
-          <div className="anim-fade d5 space-y-4">
-            {[
-              'Ми-8МТВ-1 транспортный вариант',
-              'Казанский вертолётный завод',
-              'Средства ФНБ',
-              'Льготные условия для эксплуатантов',
-            ].map((text, i) => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="w-3 h-3" style={{ background: i % 2 === 0 ? '#EF3340' : '#ffffff' }}></div>
-                <span className="text-white text-base">{text}</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {['Ми-8МТВ-1 транспортный вариант', 'Казанский вертолётный завод', 'Средства ФНБ', 'Льготные условия для эксплуатантов'].map((text, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '12px', height: '12px', background: i % 2 === 0 ? C.red : C.white }}></div>
+                <span style={{ color: C.white, fontSize: '16px' }}>{text}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(255,255,255,0.05)' }}>
-        <span className="text-white/40 text-xs">Партнёр в развитии</span>
-        <span className="text-white/40 text-xs">09 / 15</span>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.05)' }}>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>09 / 15</span>
       </div>
     </div>
   );
 }
 
-function Slide10() {
+function S10() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Масштаб</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Масштаб</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10" style={{ color: '#101820' }}>Общий объём поставок</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Общий объём поставок</h2>
         </div>
 
-        <div className="max-w-5xl">
-          <div className="anim-fade d2 text-center mb-10">
-            <div className="text-7xl md:text-8xl font-bold" style={{ color: '#EF3340' }}>150+</div>
-            <div className="text-xl mt-2" style={{ color: '#101820' }}>вертолётов</div>
-            <div className="text-sm" style={{ color: 'rgba(16,24,32,0.5)' }}>общий объём инвестпроекта</div>
+        <div style={{ maxWidth: '1024px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+            <div style={{ color: C.red, fontSize: 'clamp(56px, 8vw, 128px)', fontWeight: 700, lineHeight: 1 }}>150+</div>
+            <div style={{ color: C.black, fontSize: '20px', marginTop: '8px' }}>вертолётов</div>
+            <div style={{ color: C.t50, fontSize: '14px' }}>общий объём инвестпроекта</div>
           </div>
 
-          <div className="anim-fade d4">
-            <div className="relative h-14 rounded overflow-hidden mb-4" style={{ background: 'rgba(16,24,32,0.08)' }}>
-              <div className="absolute left-0 top-0 h-full flex items-center justify-end pr-4 rounded" style={{ width: '57%', background: '#236192' }}>
-                <span className="text-white font-bold text-sm">86 вертолётов (2023-2026)</span>
+          <div>
+            <div style={{ position: 'relative', height: '56px', borderRadius: '4px', overflow: 'hidden', background: 'rgba(16,24,32,0.08)', marginBottom: '16px' }}>
+              <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '57%', background: C.blue, display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '16px' }}>
+                <span style={{ color: C.white, fontWeight: 700, fontSize: '14px' }}>86 вертолётов (2023-2026)</span>
               </div>
-              <div className="absolute top-0 h-full flex items-center pl-4 rounded" style={{ left: '57%', width: '43%', background: '#EF3340' }}>
-                <span className="text-white font-bold text-sm">72 (новый)</span>
+              <div style={{ position: 'absolute', left: '57%', top: 0, height: '100%', width: '43%', background: C.red, display: 'flex', alignItems: 'center', paddingLeft: '16px' }}>
+                <span style={{ color: C.white, fontWeight: 700, fontSize: '14px' }}>72 (новый)</span>
               </div>
             </div>
-            <div className="flex justify-between text-sm" style={{ color: 'rgba(16,24,32,0.5)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: C.t50 }}>
               <span>Уже поставлено</span>
               <span>Новый контракт</span>
             </div>
           </div>
         </div>
       </div>
-
       <Footer num={10} />
     </div>
   );
 }
 
-function Slide11() {
+function S11() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#EF3340' }}>Значение для регионов</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.red, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Значение для регионов</span>
           </div>
-          <h2 className="text-white text-3xl md:text-4xl font-bold mb-10">Транспортная доступность</h2>
+          <h2 style={{ color: C.white, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Транспортная доступность</h2>
         </div>
 
-        <div className="max-w-5xl space-y-6">
-          <div className="anim-fade d2 border border-white/10 p-6" style={{ background: 'rgba(255,255,255,0.03)' }}>
-            <p className="text-white text-lg leading-relaxed">
-              «Поставляемые в рамках нового контракта Ми-8МТВ-1 помогут в перевозке людей и грузов,
-              в том числе в <span className="font-semibold" style={{ color: '#EF3340' }}>удалённых и труднодоступных населённых пунктах</span>,
-              где альтернатив вертолёту мало или совсем нет»
-            </p>
-            <p className="text-white/40 text-sm mt-4">— Геннадий Абраменков, замминистра промышленности и торговли России</p>
+        <div style={{ maxWidth: '1024px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div style={{ border: `1px solid ${C.w10}`, padding: '24px', background: C.w03 }}>
+            <p style={{ color: C.white, fontSize: '18px', lineHeight: 1.6 }}>«Поставляемые в рамках нового контракта Ми-8МТВ-1 помогут в перевозке людей и грузов, в том числе в <span style={{ color: C.red, fontWeight: 600 }}>удалённых и труднодоступных населённых пунктах</span>, где альтернатив вертолёту мало или совсем нет»</p>
+            <p style={{ color: C.w40, fontSize: '14px', marginTop: '16px' }}>— Геннадий Абраменков, замминистра промышленности и торговли России</p>
           </div>
 
-          <div className="anim-fade d4 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { icon: '🏥', title: 'Медицинские задачи', sub: 'Санитарная авиация' },
-              { icon: '🔍', title: 'Поисково-спасательные', sub: 'Спецмодули' },
-              { icon: '📦', title: 'Грузоперевозки', sub: 'Внешняя подвеска' },
-            ].map((item, i) => (
-              <div key={i} className="border p-4 text-center" style={{ borderColor: '#236192' }}>
-                <div className="text-2xl mb-2">{item.icon}</div>
-                <div className="text-white text-sm font-semibold">{item.title}</div>
-                <div className="text-white/40 text-xs mt-1">{item.sub}</div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+            {[{ icon: '🏥', title: 'Медицинские задачи', sub: 'Санитарная авиация' }, { icon: '🔍', title: 'Поисково-спасательные', sub: 'Спецмодули' }, { icon: '📦', title: 'Грузоперевозки', sub: 'Внешняя подвеска' }].map((item, i) => (
+              <div key={i} style={{ border: `1px solid ${C.blue}`, padding: '16px', textAlign: 'center' }}>
+                <div style={{ fontSize: '24px', marginBottom: '8px' }}>{item.icon}</div>
+                <div style={{ color: C.white, fontSize: '14px', fontWeight: 600 }}>{item.title}</div>
+                <div style={{ color: C.w40, fontSize: '12px', marginTop: '4px' }}>{item.sub}</div>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(255,255,255,0.03)' }}>
-        <span className="text-white/40 text-xs">Партнёр в развитии</span>
-        <span className="text-white/40 text-xs">11 / 15</span>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: C.w03 }}>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>11 / 15</span>
       </div>
     </div>
   );
 }
 
-function Slide12() {
+function S12() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Проблематика</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Проблематика</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10" style={{ color: '#101820' }}>Состояние вертолётного парка</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Состояние вертолётного парка</h2>
         </div>
 
-        <div className="max-w-5xl">
-          <div className="anim-fade d2 flex flex-col md:flex-row items-center gap-8 mb-10">
-            <div className="text-center">
-              <div className="text-7xl md:text-9xl font-bold leading-none" style={{ color: '#EF3340' }}>50%</div>
-              <div className="text-lg mt-4 font-semibold" style={{ color: '#101820' }}>парка в регионах РФ</div>
+        <div style={{ maxWidth: '1024px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '32px', marginBottom: '40px' }}>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: C.red, fontSize: 'clamp(56px, 8vw, 144px)', fontWeight: 700, lineHeight: 1 }}>50%</div>
+              <div style={{ color: C.black, fontSize: '18px', marginTop: '16px', fontWeight: 600 }}>парка в регионах РФ</div>
             </div>
-            <div className="text-center md:text-left">
-              <div className="text-2xl font-bold" style={{ color: '#101820' }}>старше 29 лет</div>
-              <div className="text-base mt-2" style={{ color: 'rgba(16,24,32,0.5)' }}>по данным Ассоциации вертолётной индустрии на 2025 год</div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ color: C.black, fontSize: '24px', fontWeight: 700 }}>старше 29 лет</div>
+              <div style={{ color: C.t50, fontSize: '16px', marginTop: '8px' }}>по данным Ассоциации вертолётной индустрии на 2025 год</div>
             </div>
           </div>
 
-          <div className="anim-fade d4 p-6 border-l-4" style={{ background: 'rgba(239,51,64,0.05)', borderColor: '#EF3340' }}>
-            <p className="text-lg font-semibold mb-2" style={{ color: '#101820' }}>Критическая потребность в обновлении</p>
-            <p className="text-base" style={{ color: 'rgba(16,24,32,0.6)' }}>
-              Половина регионального вертолётного парка эксплуатируется более 29 лет,
-              что создаёт серьёзные риски для безопасности полётов и требует срочной замены
-              на новую технику отечественного производства.
-            </p>
+          <div style={{ padding: '24px', borderLeft: `4px solid ${C.red}`, background: 'rgba(239,51,64,0.05)' }}>
+            <p style={{ color: C.black, fontSize: '18px', fontWeight: 600, marginBottom: '8px' }}>Критическая потребность в обновлении</p>
+            <p style={{ color: C.t60, fontSize: '16px', lineHeight: 1.6 }}>Половина регионального вертолётного парка эксплуатируется более 29 лет, что создаёт серьёзные риски для безопасности полётов и требует срочной замены на новую технику отечественного производства.</p>
           </div>
         </div>
       </div>
-
       <Footer num={12} />
     </div>
   );
 }
 
-function Slide13() {
+function S13() {
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#EF3340' }}>Цитата</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.red, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Цитата</span>
           </div>
-          <h2 className="text-white text-3xl md:text-4xl font-bold mb-10">О вертолётах Ми-8</h2>
+          <h2 style={{ color: C.white, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>О вертолётах Ми-8</h2>
         </div>
 
-        <div className="max-w-5xl">
-          <div className="anim-fade d2 pl-8 py-4 mb-8" style={{ borderLeft: '4px solid #EF3340' }}>
-            <p className="text-white text-xl md:text-2xl leading-relaxed italic">
-              «Вертолёты семейства Ми-8 — неприхотливые, надёжные и универсальные,
-              они могут работать в самых разных климатических условиях. Новая техника
-              нашего производства призвана заменить старые машины, выбывающие из парка,
-              что повысит безопасность и надёжность авиасообщения»
-            </p>
-            <div className="mt-6">
-              <p className="text-white font-bold">Владимир Артяков</p>
-              <p className="text-white/40 text-sm">первый заместитель генерального директора Госкорпорации Ростех</p>
+        <div style={{ maxWidth: '1024px' }}>
+          <div style={{ paddingLeft: '32px', borderLeft: `4px solid ${C.red}`, marginBottom: '32px' }}>
+            <p style={{ color: C.white, fontSize: 'clamp(18px, 2vw, 24px)', lineHeight: 1.5, fontStyle: 'italic' }}>«Вертолёты семейства Ми-8 — неприхотливые, надёжные и универсальные, они могут работать в самых разных климатических условиях. Новая техника нашего производства призвана заменить старые машины, выбывающие из парка, что повысит безопасность и надёжность авиасообщения»</p>
+            <div style={{ marginTop: '24px' }}>
+              <p style={{ color: C.white, fontWeight: 700 }}>Владимир Артяков</p>
+              <p style={{ color: C.w40, fontSize: '14px' }}>первый заместитель генерального директора Госкорпорации Ростех</p>
             </div>
           </div>
 
-          <div className="anim-fade d4 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '16px' }}>
             {['Неприхотливые', 'Надёжные', 'Универсальные', 'Массовые'].map((word, i) => (
-              <div key={i} className="border border-white/20 p-4 text-center">
-                <span className="text-white font-bold text-sm uppercase tracking-wider">{word}</span>
+              <div key={i} style={{ border: `1px solid ${C.w20}`, padding: '16px', textAlign: 'center' }}>
+                <span style={{ color: C.white, fontWeight: 700, fontSize: '14px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{word}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
-
-      <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(255,255,255,0.03)' }}>
-        <span className="text-white/40 text-xs">Партнёр в развитии</span>
-        <span className="text-white/40 text-xs">13 / 15</span>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: C.w03 }}>
+        <span style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</span>
+        <span style={{ color: C.w40, fontSize: '12px' }}>13 / 15</span>
       </div>
     </div>
   );
 }
 
-function Slide14() {
+function S14() {
   const timeline = [
     { year: '2023', text: 'Начало инвестиционного проекта', status: 'done' },
     { year: '2024', text: 'Продолжение поставок вертолётов Ми-8МТВ-1', status: 'done' },
@@ -686,115 +602,99 @@ function Slide14() {
   ];
 
   return (
-    <div className="w-full h-full flex flex-col relative px-8 md:px-16 py-12" style={{ background: '#ffffff' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-
-      <div className="flex-1 flex flex-col justify-center overflow-auto">
-        <div className="anim-left">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-3 h-3" style={{ background: '#EF3340' }}></div>
-            <span className="text-sm font-semibold uppercase tracking-widest" style={{ color: '#236192' }}>Сроки</span>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', position: 'relative', padding: '48px 64px', background: C.white }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', overflow: 'auto' }}>
+        <div style={{ marginBottom: '40px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <div style={{ width: '12px', height: '12px', background: C.red }}></div>
+            <span style={{ color: C.blue, fontSize: '14px', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em' }}>Сроки</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold mb-10" style={{ color: '#101820' }}>Хронология проекта</h2>
+          <h2 style={{ color: C.black, fontSize: 'clamp(24px, 3vw, 40px)', fontWeight: 700 }}>Хронология проекта</h2>
         </div>
 
-        <div className="max-w-5xl relative">
-          <div className="absolute left-6 top-0 bottom-0 w-0.5" style={{ background: 'rgba(16,24,32,0.15)' }}></div>
-
-          {timeline.map((item, i) => (
-            <div key={i} className="anim-fade flex items-start gap-6 mb-6 relative" style={{ animationDelay: `${0.2 + i * 0.12}s` }}>
-              <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0 z-10 text-xs font-bold"
-                style={{
-                  background: item.status === 'done' ? '#236192' : item.status === 'current' ? '#EF3340' : item.status === 'next' ? '#101820' : 'transparent',
-                  border: item.status === 'future' ? '2px solid rgba(16,24,32,0.25)' : 'none',
-                  color: item.status === 'future' ? 'rgba(16,24,32,0.4)' : '#ffffff',
-                }}>
-                {item.year}
+        <div style={{ maxWidth: '1024px', position: 'relative' }}>
+          <div style={{ position: 'absolute', left: '24px', top: 0, bottom: 0, width: '2px', background: C.t10 }}></div>
+          {timeline.map((item, i) => {
+            const bgColor = item.status === 'done' ? C.blue : item.status === 'current' ? C.red : item.status === 'next' ? C.black : 'transparent';
+            const textColor = item.status === 'future' ? C.t40 : C.black;
+            return (
+              <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '24px', marginBottom: '24px', position: 'relative' }}>
+                <div style={{ width: '48px', height: '48px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 1, fontSize: '12px', fontWeight: 700, background: bgColor, border: item.status === 'future' ? `2px solid ${C.t30}` : 'none', color: item.status === 'future' ? C.t40 : C.white }}>
+                  {item.year}
+                </div>
+                <div style={{ paddingTop: '12px' }}>
+                  <p style={{ fontSize: '16px', color: textColor }}>{item.text}</p>
+                </div>
               </div>
-              <div className="pt-3">
-                <p className="text-base" style={{ color: item.status === 'future' ? 'rgba(16,24,32,0.4)' : '#101820' }}>
-                  {item.text}
-                </p>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
-
       <Footer num={14} />
     </div>
   );
 }
 
-function Slide15() {
+function S15() {
   return (
-    <div className="w-full h-full flex flex-col justify-center items-center relative px-8" style={{ background: '#101820' }}>
-      <div className="absolute top-0 left-0 w-full h-1" style={{ background: '#EF3340' }}></div>
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] border border-white"></div>
-      </div>
-
-      <div className="relative z-10 text-center max-w-4xl anim-fade">
-        <div className="flex justify-center mb-8">
-          <div className="relative w-24 h-24 border-2 border-white">
-            <div className="absolute top-0 right-0 w-3/4 h-3/4" style={{ background: '#EF3340' }}></div>
+    <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', padding: '32px', background: C.black }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '4px', background: C.red }}></div>
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '896px' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '32px' }}>
+          <div style={{ position: 'relative', width: '96px', height: '96px', border: `2px solid ${C.white}` }}>
+            <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.red }}></div>
           </div>
         </div>
 
-        <h2 className="text-white text-3xl md:text-5xl font-bold mb-6 leading-tight">Вместе в будущее</h2>
-        <div className="h-px w-24 mx-auto mb-6" style={{ background: '#236192' }}></div>
-        <p className="text-white/60 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto">
-          Контракт на 72 вертолёта Ми-8МТВ-1 — продолжение системной работы
-          по обновлению вертолётного парка России и повышению транспортной связанности регионов
-        </p>
+        <h2 style={{ color: C.white, fontSize: 'clamp(24px, 4vw, 48px)', fontWeight: 700, marginBottom: '24px', lineHeight: 1.2 }}>Вместе в будущее</h2>
+        <div style={{ height: '1px', width: '96px', background: C.blue, margin: '0 auto 24px' }}></div>
+        <p style={{ color: C.w60, fontSize: 'clamp(16px, 2vw, 20px)', lineHeight: 1.5, maxWidth: '672px', margin: '0 auto' }}>Контракт на 72 вертолёта Ми-8МТВ-1 — продолжение системной работы по обновлению вертолётного парка России и повышению транспортной связанности регионов</p>
 
-        <div className="anim-fade d4 mt-10 grid grid-cols-3 gap-6 max-w-lg mx-auto">
+        <div style={{ marginTop: '40px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px', maxWidth: '512px', margin: '40px auto 0' }}>
           <div>
-            <div className="text-3xl font-bold" style={{ color: '#EF3340' }}>150+</div>
-            <div className="text-white/40 text-xs mt-1">вертолётов</div>
+            <div style={{ color: C.red, fontSize: '30px', fontWeight: 700 }}>150+</div>
+            <div style={{ color: C.w40, fontSize: '12px', marginTop: '4px' }}>вертолётов</div>
           </div>
           <div>
-            <div className="text-3xl font-bold" style={{ color: '#236192' }}>72</div>
-            <div className="text-white/40 text-xs mt-1">новый контракт</div>
+            <div style={{ color: C.blue, fontSize: '30px', fontWeight: 700 }}>72</div>
+            <div style={{ color: C.w40, fontSize: '12px', marginTop: '4px' }}>новый контракт</div>
           </div>
           <div>
-            <div className="text-white text-3xl font-bold">2026</div>
-            <div className="text-white/40 text-xs mt-1">первые поставки</div>
+            <div style={{ color: C.white, fontSize: '30px', fontWeight: 700 }}>2026</div>
+            <div style={{ color: C.w40, fontSize: '12px', marginTop: '4px' }}>первые поставки</div>
           </div>
         </div>
       </div>
 
-      <div className="absolute bottom-0 left-0 w-full py-6 px-8" style={{ background: 'rgba(35,97,146,0.15)' }}>
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 border border-white/40 relative">
-              <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-white/40"></div>
+      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '24px 32px', background: 'rgba(35,97,146,0.15)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ width: '32px', height: '32px', border: `1px solid ${C.w40}`, position: 'relative' }}>
+              <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.w40 }}></div>
             </div>
             <div>
-              <div className="text-white font-bold text-sm">Ростех</div>
-              <div className="text-white/40 text-xs">Партнёр в развитии</div>
+              <div style={{ color: C.white, fontWeight: 700, fontSize: '14px' }}>Ростех</div>
+              <div style={{ color: C.w40, fontSize: '12px' }}>Партнёр в развитии</div>
             </div>
           </div>
-          <div className="text-white/30 text-xs">rostec.ru</div>
+          <div style={{ color: C.w30, fontSize: '12px' }}>rostec.ru</div>
         </div>
       </div>
     </div>
   );
 }
 
-// Footer for light slides
 function Footer({ num }: { num: number }) {
   return (
-    <div className="absolute bottom-0 left-0 w-full py-4 px-8 flex justify-between items-center" style={{ background: 'rgba(16,24,32,0.03)' }}>
-      <div className="flex items-center gap-2">
-        <div className="w-5 h-5 relative" style={{ background: '#101820' }}>
-          <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-white"></div>
+    <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', padding: '16px 32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: C.t04 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ width: '20px', height: '20px', position: 'relative', background: C.black }}>
+          <div style={{ position: 'absolute', top: 0, right: 0, width: '75%', height: '75%', background: C.white }}></div>
         </div>
-        <span className="text-xs" style={{ color: 'rgba(16,24,32,0.4)' }}>Ростех</span>
+        <span style={{ color: C.t40, fontSize: '12px' }}>Ростех</span>
       </div>
-      <span className="text-xs" style={{ color: 'rgba(16,24,32,0.3)' }}>{String(num).padStart(2, '0')} / 15</span>
+      <span style={{ color: C.t30, fontSize: '12px' }}>{String(num).padStart(2, '0')} / 15</span>
     </div>
   );
 }
-
-export default App;
